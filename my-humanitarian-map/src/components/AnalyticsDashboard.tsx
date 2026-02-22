@@ -364,16 +364,7 @@ export function AnalyticsDashboard({ onBack }: AnalyticsDashboardProps) {
         fill: d.inform_conflict_intensity > 7 ? COLORS.red : d.inform_conflict_intensity > 5 ? COLORS.orange : COLORS.amber,
       })), [data]);
 
-  const trendData = useMemo(() =>
-    data.filter(d => !isNaN(d.trend_inform_risk))
-      .sort((a, b) => b.trend_inform_risk - a.trend_inform_risk)
-      .map(d => ({
-        name: d.ISO3,
-        'Risk Δ%': d.trend_inform_risk,
-        fill: d.trend_inform_risk > 0 ? COLORS.red : COLORS.green,
-      })), [data]);
-
-  const coverageDataScatter = useMemo(() =>
+const coverageDataScatter = useMemo(() =>
     data.filter(d => d.health_coverage > 0 && d.food_coverage > 0)
       .map(d => ({
         name: d.name, ISO3: d.ISO3,
