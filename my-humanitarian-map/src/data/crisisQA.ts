@@ -4,7 +4,7 @@
 export interface CrisisQA {
   question: string;
   answer: string;
-  category: 'funding' | 'countries' | 'trends' | 'analysis' | 'general';
+  category: 'funding' | 'countries' | 'trends' | 'analysis' | 'general' | 'map';
   keywords: string[];
 }
 
@@ -69,6 +69,50 @@ export const crisisKnowledgeBase: CrisisQA[] = [
     answer: "There are 20 countries analyzed in the CrisisCompass database.\n\nCrisis distribution:\n- 5 countries: Severe crisis (score > 0.5)\n- 8 countries: Moderate crisis (score 0.3-0.5)\n- 7 countries: Lower crisis (score < 0.3)\n\nTotal affected population: ~1.2 billion people.",
     category: 'general',
     keywords: ['how many', 'total', 'count', 'countries', 'database']
+  },
+
+  // Map-Specific Questions
+  {
+    question: "What do the map colors mean?",
+    answer: "Map colors indicate crisis severity:\n\n🔴 **Red** - Severe crisis (score > 0.5)\n🟡 **Yellow** - Moderate crisis (score 0.3-0.5)\n🟢 **Green** - Lower crisis (score < 0.3)\n\nDarker shades indicate higher crisis scores within each category.",
+    category: 'map',
+    keywords: ['map colors', 'colors', 'legend', 'what do colors mean', 'red yellow green']
+  },
+  {
+    question: "Which countries are marked in red?",
+    answer: "Red countries (severe crisis) include:\n\n1. Nigeria - Crisis Score: 0.666\n2. Haiti - Crisis Score: 0.647\n3. Afghanistan - Crisis Score: 0.635\n4. Mali - Crisis Score: 0.539\n5. Myanmar - Crisis Score: 0.461\n\nThese countries have the most critical humanitarian situations.",
+    category: 'map',
+    keywords: ['red countries', 'severe crisis', 'red markers', 'critical countries']
+  },
+  {
+    question: "How do I interact with the map?",
+    answer: "Map interactions:\n\n🖱️ **Click countries** - View detailed crisis information\n🔍 **Zoom** - Use mouse wheel or pinch to zoom\n🎯 **Pan** - Click and drag to move the map\n📊 **Side panel** - Selected country details appear on the right\n\nClick any country to see its specific crisis metrics and funding gaps.",
+    category: 'map',
+    keywords: ['interact', 'how to use', 'click', 'zoom', 'pan', 'navigate']
+  },
+  {
+    question: "What does the bubble size represent?",
+    answer: "Bubble size represents the total population in need:\n\n🔴 **Large bubbles** - Countries with millions in need\n🔵 **Small bubbles** - Countries with smaller affected populations\n\nSize helps visualize the scale of humanitarian need across different countries.",
+    category: 'map',
+    keywords: ['bubble size', 'size', 'population', 'scale', 'what does size mean']
+  },
+  {
+    question: "Which region has the most crises?",
+    answer: "Regional crisis distribution:\n\n🌍 **Africa** - 9 countries (45% of total)\n   Nigeria, Ethiopia, DR Congo, Somalia, South Sudan, Mali, Burkina Faso, Central African Republic, Chad\n\n🌏 **Asia** - 6 countries (30%)\n   Afghanistan, Myanmar, Yemen, Syria, Pakistan, Bangladesh\n\n🌎 **Americas** - 5 countries (25%)\n   Haiti, Colombia, Guatemala, Honduras, El Salvador\n\nAfrica has the highest concentration of humanitarian crises.",
+    category: 'map',
+    keywords: ['region', 'most crises', 'africa', 'asia', 'americas', 'distribution']
+  },
+  {
+    question: "How are crisis scores calculated?",
+    answer: "Crisis Score factors:\n\n📊 **Health Needs** (35%) - Population requiring health services\n💰 **Funding Gap** (35%) - Unfunded portion of requirements\n👥 **Per-Capita Funding** (30%) - Funding per person in need\n\nFormula: 0.35×Health Needs + 0.35×Funding Gap + 0.30×Per-Capita Funding\n\nHigher scores indicate more severe humanitarian situations.",
+    category: 'map',
+    keywords: ['crisis score', 'calculation', 'formula', 'how calculated', 'methodology']
+  },
+  {
+    question: "What happens when I click a country?",
+    answer: "When you click a country:\n\n📋 **Side panel opens** with detailed information\n📊 **Key metrics** - Crisis score, population, funding gaps\n🏥 **Health data** - Coverage rates, needs, funding\n💸 **Financial data** - Required vs funded amounts\n📈 **Trends** - Year-over-year changes\n\nThe panel provides comprehensive crisis analysis for the selected country.",
+    category: 'map',
+    keywords: ['click country', 'what happens', 'side panel', 'details', 'information']
   }
 ];
 

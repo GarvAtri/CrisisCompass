@@ -152,7 +152,7 @@ export const GeminiChat: React.FC<GeminiChatProps> = ({
     return (
       <div 
         className="fixed bottom-6 right-6 z-50"
-        style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 50 }}
+        style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 9998 }}
       >
         <button
           onClick={() => setIsOpen(true)}
@@ -198,14 +198,15 @@ export const GeminiChat: React.FC<GeminiChatProps> = ({
         position: 'fixed', 
         bottom: '24px', 
         right: '24px', 
-        zIndex: 50,
+        zIndex: 9999,
         background: 'white',
         borderRadius: '12px',
         boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
         width: '400px',
         height: '600px',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        overflow: 'hidden'
       }}
     >
       {/* Header */}
@@ -366,7 +367,12 @@ export const GeminiChat: React.FC<GeminiChatProps> = ({
       {/* Input */}
       <div 
         className="p-4 border-t"
-        style={{ padding: '16px', borderTop: '1px solid #e5e7eb' }}
+        style={{ 
+          padding: '16px', 
+          borderTop: '1px solid #e5e7eb',
+          position: 'relative',
+          zIndex: 1
+        }}
       >
         <div className="flex gap-2">
           <input

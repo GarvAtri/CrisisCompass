@@ -3,6 +3,7 @@ import { Globe, LoaderCircle, BarChart3 } from 'lucide-react';
 import { WorldMap } from './components/worldMap';
 import { RiskCountryPanel } from './components/riskCountryPanel';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
+import { GeminiChat } from './components/GeminiChat';
 import { loadStudyScoredCountries, type StudyCountry } from './data/studyScoredData';
 
 type ViewType = 'map' | 'analytics';
@@ -139,6 +140,13 @@ export default function App() {
           </aside>
         )}
       </main>
+      
+      {/* AI Chat Assistant for Map View */}
+      <GeminiChat 
+        crisisData={countries} 
+        selectedCountry={selectedCountry?.name} 
+        currentChart="World Map" 
+      />
     </div>
   );
 }
