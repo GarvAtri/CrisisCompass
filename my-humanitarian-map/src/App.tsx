@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Globe, LoaderCircle, BookOpen } from 'lucide-react';
+import { Globe, LoaderCircle, BarChart3 } from 'lucide-react';
 import { WorldMap } from './components/worldMap';
 import { RiskCountryPanel } from './components/riskCountryPanel';
 import { StoryPage } from './pages/StoryPage';
 import { loadStudyScoredCountries, type StudyCountry } from './data/studyScoredData';
 
 export default function App() {
-  type ViewType = 'map' | 'story';
+  type ViewType = 'map' | 'analytics';
   const [currentView, setCurrentView] = useState<ViewType>('map');
   const [countries, setCountries] = useState<StudyCountry[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<StudyCountry | null>(null);
@@ -64,9 +64,9 @@ export default function App() {
     );
   }
 
-  if (currentView === 'story') {
-    return <StoryPage />;
-  }
+  //if (currentView === 'analytics') {
+  //  return <StoryPage onBack={() => setCurrentView('map')} />;
+  //}
 
   return (
     <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', background: '#020617' }}>
@@ -77,21 +77,21 @@ export default function App() {
             <div>
               <h1 style={{ margin: 0, fontSize: 28, lineHeight: 1.2 }}>Crisis Compass</h1>
               <p style={{ margin: '6px 0 0 0', fontSize: 16, color: '#cbd5e1' }}>
-                Humanitarian Crisis Mapping & Storytelling
+                Humanitarian Health Funding Analysis
               </p>
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
             <div style={{ textAlign: 'right', fontSize: 15, color: '#cbd5e1' }}>
-              <div>Countries shown: <span style={{ color: '#fff' }}>{stats.totalCountries}</span></div>
+              <div>Countries: <span style={{ color: '#fff' }}>{stats.totalCountries}</span></div>
               <div>Total 2025 need: <span style={{ color: '#fff' }}>{(stats.totalInNeed / 1e6).toFixed(1)}M</span></div>
-              <div>Average crisis score: <span style={{ color: '#fff' }}>{stats.avgScore.toFixed(2)}</span></div>
+              <div>Avg crisis score: <span style={{ color: '#fff' }}>{stats.avgScore.toFixed(2)}</span></div>
             </div>
             
             <div style={{ display: 'flex', gap: 8 }}>
               <button
-                onClick={() => setCurrentView('map' as const)}
+                onClick={() => setCurrentView('map')}
                 style={{
                   padding: '8px 16px',
                   background: currentView === 'map' ? '#fbbf24' : '#374151',
@@ -104,14 +104,14 @@ export default function App() {
                 }}
               >
                 <Globe size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
-                Map View
+                Map
               </button>
               <button
-                onClick={() => setCurrentView('story' as const)}
+                onClick={() => setCurrentView('analytics')}
                 style={{
                   padding: '8px 16px',
-                  background: currentView === 'story' ? '#fbbf24' : '#374151',
-                  color: currentView === 'story' ? '#000' : '#fff',
+                  background: currentView === 'analytics' ? '#fbbf24' : '#374151',
+                  color: currentView === 'analytics' ? '#000' : '#fff',
                   border: 'none',
                   borderRadius: 6,
                   cursor: 'pointer',
@@ -119,8 +119,8 @@ export default function App() {
                   fontWeight: 500
                 }}
               >
-                <BookOpen size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
-                Story View
+                <BarChart3 size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
+                Analytics
               </button>
             </div>
           </div>

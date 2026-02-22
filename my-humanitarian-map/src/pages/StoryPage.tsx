@@ -1,10 +1,9 @@
-import React from 'react';
-import { ScrollytellingStory } from '../components/ScrollytellingStory';
+import { AnalyticsDashboard } from '../components/AnalyticsDashboard.tsx';
 
-export const StoryPage: React.FC = () => {
-  return (
-    <div className="min-h-screen">
-      <ScrollytellingStory />
-    </div>
-  );
+interface StoryPageProps {
+  onBack: () => void;
+}
+
+export const StoryPage: React.FC<StoryPageProps> = ({ onBack }) => {
+  return <AnalyticsDashboard onBack={onBack} />;
 };
