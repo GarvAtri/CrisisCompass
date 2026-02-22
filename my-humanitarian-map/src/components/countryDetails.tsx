@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, PieChart, Pie, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, PieChart, Pie, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { type CountryData, getRiskColor, formatCurrency, formatNumber } from '../countries/countriesData';
 import { X, Users, DollarSign, TrendingDown, AlertTriangle } from 'lucide-react';
 
@@ -108,7 +107,7 @@ export function CountryDetails({ country, onClose }: CountryDetailsProps) {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={(props: any) => `${props.name}: ${(props.percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
@@ -117,7 +116,7 @@ export function CountryDetails({ country, onClose }: CountryDetailsProps) {
                       <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: any) => formatCurrency(value as number)} />
+                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-col justify-center space-y-3">
@@ -144,7 +143,7 @@ export function CountryDetails({ country, onClose }: CountryDetailsProps) {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="sector" angle={-15} textAnchor="end" height={80} />
                   <YAxis label={{ value: 'People', angle: -90, position: 'insideLeft' }} />
-                  <Tooltip formatter={(value: any) => formatNumber(value as number)} />
+                  <Tooltip formatter={(value) => formatNumber(value as number)} />
                   <Legend />
                   <Bar dataKey="inNeed" name="In Need" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="targeted" name="Targeted" fill="#10b981" radius={[4, 4, 0, 0]} />
@@ -163,7 +162,7 @@ export function CountryDetails({ country, onClose }: CountryDetailsProps) {
                   <PolarAngleAxis dataKey="sector" />
                   <PolarRadiusAxis angle={90} domain={[0, 100]} />
                   <Radar name="Coverage %" dataKey="coverage" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                  <Tooltip formatter={(value: any) => `${(value as number).toFixed(1)}%`} />
+                  <Tooltip formatter={(value) => `${(value as number).toFixed(1)}%`} />
                 </RadarChart>
               </ResponsiveContainer>
               <div className="mt-2 text-sm text-gray-600 text-center">

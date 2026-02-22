@@ -1,122 +1,99 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Globe, LoaderCircle } from 'lucide-react';
 import { WorldMap } from './components/worldMap';
-import { CountryDetails } from './components/countryDetails';
-import { type CountryData } from './countries/countriesData';
-import { Globe, Info } from 'lucide-react';
+import { RiskCountryPanel } from './components/riskCountryPanel';
+import { loadStudyScoredCountries, type StudyCountry } from './data/studyScoredData';
 
 export default function App() {
-  const [selectedCountry, setSelectedCountry] = useState<CountryData | null>(null);
-  const [showInfo, setShowInfo] = useState(false);
+  const [countries, setCountries] = useState<StudyCountry[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<StudyCountry | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    loadStudyScoredCountries()
+      .then((data) => {
+        if (!active) return;
+        setCountries(data);
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(err instanceof Error ? err.message : 'Failed to load study file');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const stats = useMemo(() => {
+    const totalCountries = countries.length;
+    const totalInNeed = countries.reduce((sum, country) => sum + country.totalNeed2025, 0);
+    const avgScore = totalCountries > 0
+      ? countries.reduce((sum, country) => sum + country.crisisScore, 0) / totalCountries
+      : 0;
+
+    return {
+      totalCountries,
+      totalInNeed,
+      avgScore
+    };
+  }, [countries]);
+
+  if (loading) {
+    return (
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: '#020617', color: '#fff' }}>
+        <LoaderCircle size={20} className="animate-spin" />
+        <span>Loading study-aligned map...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020617', color: '#fca5a5', padding: 24 }}>
+        Failed to load data: {error}
+      </div>
+    );
+  }
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-slate-900">
-      {/* Header */}
-      <header className="flex-shrink-0 bg-slate-800 border-b border-slate-700 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Globe className="w-8 h-8 text-blue-400" />
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', background: '#020617' }}>
+      <header style={{ flexShrink: 0, background: '#0f172a', borderBottom: '1px solid #334155', padding: '16px 24px', color: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Globe size={28} color="#fbbf24" />
             <div>
-              <h1 className="text-xl text-white">
-                CRISIS COMPASS: Food Security, Nutrition & Health Analysis
-              </h1>
-              <p className="text-sm text-slate-300">
-                Interactive World Map - Humanitarian Crisis Dashboard 2026
+              <h1 style={{ margin: 0, fontSize: 28, lineHeight: 1.2 }}>Crisis Compass: Study-Aligned Crisis Score Map</h1>
+              <p style={{ margin: '6px 0 0 0', fontSize: 16, color: '#cbd5e1' }}>
+                Source: `crisis_compass_final_scored.csv`
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setShowInfo(!showInfo)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            <Info className="w-4 h-4" />
-            About
-          </button>
+
+          <div style={{ textAlign: 'right', fontSize: 15, color: '#cbd5e1' }}>
+            <div>Countries shown: <span style={{ color: '#fff' }}>{stats.totalCountries}</span></div>
+            <div>Total 2025 need: <span style={{ color: '#fff' }}>{(stats.totalInNeed / 1e6).toFixed(1)}M</span></div>
+            <div>Average crisis score: <span style={{ color: '#fff' }}>{stats.avgScore.toFixed(2)}</span></div>
+          </div>
         </div>
       </header>
 
-      {/* Info Panel */}
-      {showInfo && (
-        <div className="flex-shrink-0 bg-blue-50 border-b border-blue-200 px-6 py-4">
-          <div className="max-w-4xl">
-            <h2 className="text-lg mb-2">About This Dashboard</h2>
-            <p className="text-sm text-gray-700 mb-3">
-              This interactive map visualizes the global humanitarian crisis landscape, focusing on the intersection
-              of food security, nutrition, and health funding gaps. Data includes metrics from multiple international
-              datasets including UN, World Bank, and humanitarian organization reports.
-            </p>
-            <div className="grid grid-cols-3 gap-4 text-sm">
-              <div>
-                <div className="text-xs text-gray-600 mb-1">Key Metrics</div>
-                <ul className="text-xs space-y-1 text-gray-700">
-                  <li>• Crisis Score (0-100%)</li>
-                  <li>• Absorption Capacity</li>
-                  <li>• Funding Gaps & Coverage</li>
-                </ul>
-              </div>
-              <div>
-                <div className="text-xs text-gray-600 mb-1">Data Sources</div>
-                <ul className="text-xs space-y-1 text-gray-700">
-                  <li>• World Bank Indicators</li>
-                  <li>• UN Humanitarian Data</li>
-                  <li>• Health & Nutrition Reports</li>
-                </ul>
-              </div>
-              <div>
-                <div className="text-xs text-gray-600 mb-1">Usage</div>
-                <ul className="text-xs space-y-1 text-gray-700">
-                  <li>• Click countries for details</li>
-                  <li>• Zoom and pan the map</li>
-                  <li>• Compare funding gaps</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <main style={{ flex: 1, minHeight: 0, display: 'flex', overflow: 'hidden' }}>
+        <section style={{ width: selectedCountry ? '66.67%' : '100%', minWidth: 0 }}>
+          <WorldMap countries={countries} onCountrySelect={setSelectedCountry} selectedCountry={selectedCountry} />
+        </section>
 
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Map Section */}
-        <div className={`transition-all duration-300 ${selectedCountry ? 'w-2/3' : 'w-full'}`}>
-          <WorldMap 
-            onCountrySelect={setSelectedCountry}
-            selectedCountry={selectedCountry}
-          />
-        </div>
-
-        {/* Details Panel */}
         {selectedCountry && (
-          <div className="w-1/3 border-l border-slate-700 bg-white shadow-2xl">
-            <CountryDetails 
-              country={selectedCountry}
-              onClose={() => setSelectedCountry(null)}
-            />
-          </div>
+          <aside style={{ width: '33.33%', minWidth: 360, borderLeft: '1px solid #334155', background: '#fff' }}>
+            <RiskCountryPanel country={selectedCountry} onClose={() => setSelectedCountry(null)} />
+          </aside>
         )}
-      </div>
-
-      {/* Footer Stats */}
-      <footer className="flex-shrink-0 bg-slate-800 border-t border-slate-700 px-6 py-3">
-        <div className="flex items-center justify-between text-sm text-slate-300">
-          <div>
-            {selectedCountry ? (
-              <span>Selected: <span className="text-white">{selectedCountry.name}</span> - Funding: {selectedCountry.metrics.fundingPercentage.toFixed(1)}%</span>
-            ) : (
-              <span>Click on any country marker to view detailed analysis</span>
-            )}
-          </div>
-          <div className="flex items-center gap-6">
-            <div>
-              <span className="text-slate-400">Countries Tracked: </span>
-              <span className="text-white">26</span>
-            </div>
-            <div>
-              <span className="text-slate-400">Data Source: </span>
-              <span className="text-white">UN OCHA, World Bank, Humanitarian Data Exchange</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      </main>
     </div>
   );
 }
