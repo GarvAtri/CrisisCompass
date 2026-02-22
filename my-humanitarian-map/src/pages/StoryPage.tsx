@@ -1,4 +1,4 @@
-import { AnalyticsDashboard } from '../components/AnalyticsDashboard.tsx';
+import { AnalyticsDashboard } from '../components/AnalyticsDashboard';
 
 interface StoryPageProps {
   onBack: () => void;

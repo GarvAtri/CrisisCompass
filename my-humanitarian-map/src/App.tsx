@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Globe, LoaderCircle, BarChart3 } from 'lucide-react';
 import { WorldMap } from './components/worldMap';
 import { RiskCountryPanel } from './components/riskCountryPanel';
-import { StoryPage } from './pages/StoryPage';
+import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { loadStudyScoredCountries, type StudyCountry } from './data/studyScoredData';
 
+type ViewType = 'map' | 'analytics';
+
 export default function App() {
-  type ViewType = 'map' | 'analytics';
   const [currentView, setCurrentView] = useState<ViewType>('map');
   const [countries, setCountries] = useState<StudyCountry[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<StudyCountry | null>(null);
@@ -64,9 +65,9 @@ export default function App() {
     );
   }
 
-  //if (currentView === 'analytics') {
-  //  return <StoryPage onBack={() => setCurrentView('map')} />;
-  //}
+  if (currentView === 'analytics') {
+    return <AnalyticsDashboard onBack={() => setCurrentView('map')} />;
+  }
 
   return (
     <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', background: '#020617' }}>
