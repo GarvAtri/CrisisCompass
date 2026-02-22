@@ -112,8 +112,8 @@ export default function App() {
                 onClick={() => setCurrentView('analytics')}
                 style={{
                   padding: '8px 16px',
-                  background: currentView === 'analytics' ? '#fbbf24' : '#374151',
-                  color: currentView === 'analytics' ? '#000' : '#fff',
+                  background: (currentView as string) === 'analytics' ? '#fbbf24' : '#374151',
+                  color: (currentView as string) === 'analytics' ? '#000' : '#fff',
                   border: 'none',
                   borderRadius: 6,
                   cursor: 'pointer',
