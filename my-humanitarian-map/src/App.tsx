@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Globe, LoaderCircle } from 'lucide-react';
+import { Globe, LoaderCircle, BookOpen } from 'lucide-react';
 import { WorldMap } from './components/worldMap';
 import { RiskCountryPanel } from './components/riskCountryPanel';
+import { StoryPage } from './pages/StoryPage';
 import { loadStudyScoredCountries, type StudyCountry } from './data/studyScoredData';
 
 export default function App() {
+  type ViewType = 'map' | 'story';
+  const [currentView, setCurrentView] = useState<ViewType>('map');
   const [countries, setCountries] = useState<StudyCountry[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<StudyCountry | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +51,7 @@ export default function App() {
     return (
       <div style={{ height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, background: '#020617', color: '#fff' }}>
         <LoaderCircle size={20} className="animate-spin" />
-        <span>Loading study-aligned map...</span>
+        <span>Loading CrisisCompass...</span>
       </div>
     );
   }
@@ -61,6 +64,10 @@ export default function App() {
     );
   }
 
+  if (currentView === 'story') {
+    return <StoryPage />;
+  }
+
   return (
     <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', background: '#020617' }}>
       <header style={{ flexShrink: 0, background: '#0f172a', borderBottom: '1px solid #334155', padding: '16px 24px', color: '#fff' }}>
@@ -68,17 +75,54 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <Globe size={28} color="#fbbf24" />
             <div>
-              <h1 style={{ margin: 0, fontSize: 28, lineHeight: 1.2 }}>Crisis Compass: Study-Aligned Crisis Score Map</h1>
+              <h1 style={{ margin: 0, fontSize: 28, lineHeight: 1.2 }}>Crisis Compass</h1>
               <p style={{ margin: '6px 0 0 0', fontSize: 16, color: '#cbd5e1' }}>
-                Source: `crisis_compass_final_scored.csv`
+                Humanitarian Crisis Mapping & Storytelling
               </p>
             </div>
           </div>
 
-          <div style={{ textAlign: 'right', fontSize: 15, color: '#cbd5e1' }}>
-            <div>Countries shown: <span style={{ color: '#fff' }}>{stats.totalCountries}</span></div>
-            <div>Total 2025 need: <span style={{ color: '#fff' }}>{(stats.totalInNeed / 1e6).toFixed(1)}M</span></div>
-            <div>Average crisis score: <span style={{ color: '#fff' }}>{stats.avgScore.toFixed(2)}</span></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <div style={{ textAlign: 'right', fontSize: 15, color: '#cbd5e1' }}>
+              <div>Countries shown: <span style={{ color: '#fff' }}>{stats.totalCountries}</span></div>
+              <div>Total 2025 need: <span style={{ color: '#fff' }}>{(stats.totalInNeed / 1e6).toFixed(1)}M</span></div>
+              <div>Average crisis score: <span style={{ color: '#fff' }}>{stats.avgScore.toFixed(2)}</span></div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={() => setCurrentView('map' as const)}
+                style={{
+                  padding: '8px 16px',
+                  background: currentView === 'map' ? '#fbbf24' : '#374151',
+                  color: currentView === 'map' ? '#000' : '#fff',
+                  border: 'none',
+                  borderRadius: 6,
+                  cursor: 'pointer',
+                  fontSize: 14,
+                  fontWeight: 500
+                }}
+              >
+                <Globe size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
+                Map View
+              </button>
+              <button
+                onClick={() => setCurrentView('story' as const)}
+                style={{
+                  padding: '8px 16px',
+                  background: currentView === 'story' ? '#fbbf24' : '#374151',
+                  color: currentView === 'story' ? '#000' : '#fff',
+                  border: 'none',
+                  borderRadius: 6,
+                  cursor: 'pointer',
+                  fontSize: 14,
+                  fontWeight: 500
+                }}
+              >
+                <BookOpen size={16} style={{ display: 'inline', marginRight: 6, verticalAlign: 'middle' }} />
+                Story View
+              </button>
+            </div>
           </div>
         </div>
       </header>
