@@ -4,6 +4,7 @@ import {
   BarChart, Bar, Cell, ReferenceLine, Legend, Label
 } from 'recharts';
 import { ArrowLeft, TrendingDown, Activity, DollarSign, Shield, Crosshair, BarChart3 } from 'lucide-react';
+import { GeminiChat } from './GeminiChat';
 
 /* ------------------------------------------------------------------ */
 /* Interfaces for Enriched Data                                       */
@@ -321,7 +322,6 @@ export function AnalyticsDashboard({ onBack }: AnalyticsDashboardProps) {
         setHNOData(hno);
         setSectorData(sector);
       })
-      .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
@@ -745,6 +745,13 @@ export function AnalyticsDashboard({ onBack }: AnalyticsDashboardProps) {
 
         </div>
       </div>
+      
+      {/* AI Chat Assistant */}
+      <GeminiChat 
+        crisisData={data} 
+        selectedCountry={undefined} 
+        currentChart="Analytics Dashboard" 
+      />
     </div>
   );
 }
